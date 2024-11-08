@@ -1,9 +1,12 @@
 <?php
+include 'view/View.php';
 class Router {
   
   public function main() {
-
-    echo "Hello world";
+      
+    $view = new View();
+    $view->prepareAnimalPage("Médor", "Chien");
+    $view->render();
   }
   
 }
