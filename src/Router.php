@@ -1,22 +1,13 @@
 <?php
 include 'view/View.php';
+include 'control/Controller.php';
 class Router {
   
   public function main() {
 
-    //$view = new View();
-    $controler = new Controler();
+    $controller = new Controller(new View());
+    $controller->showInformation("medor");
 
-    $id = 'medor';
-
-    if ( !empty($_GET) && isset($_GET['id']) ){
-      $id = htmlspecialschars($_GET['id']);
-    }
-      
-
-    $controler->showInformation($id);
-    //$view->prepareAnimalPage("Médor", "Chien");
-    //$view->render();
   }
   
 }
