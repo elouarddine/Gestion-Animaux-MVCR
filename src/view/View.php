@@ -1,46 +1,46 @@
 <?php
+
 class View {
-  private $title;
-  private $content;
+    public $title;
+    public $content;
+    
+    
+    public function getTitle() {
+      return $this->title;
+    }
 
-  public function getTitle() {
-     return $this->title;
-  }
-  public function getContent() {
-     return $this->content;
-  }
-  
-  public function setTitle($title) {
-      $this->title = $title;
-  }
-  public function setContent($content) {
-      $this->content = $content;
-  }
- 
-  public function render() {
-      echo "<!DOCTYPE html> 
-           <html lang='fr'>
-           <head>
-              <title>Page sur {$this->title}</title>
-           </head>
-           <body>
-                <h1>Page sur{$this->title}</h1>
-                <div>
-                  {$this->title} est un animal de l'espèce {$this->content}
-                </div>
-           </body>
-</html>";
-  }
+    public function getContent() {
+      return $this->content;
+    }
 
-  public function prepareTestPage(){
-      $this->setTitle("Le Titre de View");
-      $this->setContent("Le Contenu de View");
-  }
+    public function render() {
+        echo "<!DOCTYPE html>
+        <html>
+        <head>
+            <title>{$this->title}</title>
+        </head>
+        <body>
+            <h1>{$this->title}</h1>
+            <p>{$this->content}</p>
+        </body>
+        </html>";
+    }
 
-  public function prepareAnimalPage($name, $species){
-      $this->setTitle($name);
-      $this->setContent($species);
-  }
+    public function prepareTestPage() {
+        $this->title = "Page de Test";
+        $this->content = "Ceci est le contenu de la page de test.";
+    }
+
+    public function prepareAnimalPage(Animal $animal) {
+        $this->title = "Page sur " . $animal->getNom();
+        $this->content = $animal->getNom() . " est un " . $animal->getEspece() . " de " . $animal->getAge() . " ans.";
+    }
+
+    public function prepareUnknownAnimalPage() {
+        $this->title = "Animal inconnu";
+        $this->content = "Désolé, cet animal est inconnu.";
+    }
 
 }
 
+?>

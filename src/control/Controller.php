@@ -1,41 +1,44 @@
 <?php
 
+include 'model/Animal.php';
 
 class Controller {
-  
-  private View $view;
-  
-  private $animalsTab = array(
-	'medor' => array('Médor', 'chien'),
-	'felix' => array('Félix', 'chat'),
-	'denver' => array('Denver', 'dinosaure'),
-);
-  
-  public function __construct(View $view) {
-    $this->view = $view;
+  private $view;
+  private $animalsTab;
 
+  public function __construct($view) {
+      $this->view = $view;
+
+      $this->animalsTab = array(
+          'medor' => new Animal("Médor", "chien", 5),
+          'felix' => new Animal("Félix", "chat", 3),
+          'denver' => new Animal("Denver", "dinosaure", 150)
+      );
   }
 
   public function getView() {
      return $this->view;
   }
   
-  public function showInformation($id) {
-	foreach ($this->animalsTab as $key => $val) {
-           if($id === $key){
-	      $this->view->prepareAnimalPage($val[0], $val[1]); 
-           }
-        }
-        if ( empty($this->view->getTitle()) ){
-        	echo "animal inconnu";
-        }
-        else{
-        
-        $this->view->render();
-        }
-	
+ public function showInformation($id) {
+    $found = false;  
 
-  }
+    foreach ($this->animalsTab as $key => $animal) {
+        if ($key === $id) {
+            $this->view->prepareAnimalPage($animal);
+            $found = true;
+            break; 
+        }
+    }
+
+    if (!$found) {
+        $this->view->prepareUnknownAnimalPage();
+    }
+     
+     $this->view->render();
+    
+}
+
 
   
 }
