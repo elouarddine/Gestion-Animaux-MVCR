@@ -38,8 +38,6 @@ class View {
         $this->content = "Désolé, cet animal est inconnu.";
     }
 
-    
-
     public function prepareListPage(array $animals) {
         $this->title = "Liste des Animaux";
         $this->content = "<ul>";
