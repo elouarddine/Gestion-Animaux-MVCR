@@ -3,14 +3,11 @@
 class View {
     public $title;
     public $content;
-    
-    
-    public function getTitle() {
-      return $this->title;
-    }
+    private $router;  
 
-    public function getContent() {
-      return $this->content;
+
+    public function __construct($router) {
+        $this->router = $router;
     }
 
     public function render() {
@@ -41,6 +38,18 @@ class View {
         $this->content = "Désolé, cet animal est inconnu.";
     }
 
+    
+
+    public function prepareListPage(array $animals) {
+        $this->title = "Liste des Animaux";
+        $this->content = "<ul>";
+        foreach ($animals as $id => $animal) {
+            $url = $this->router->getAnimalURL($id);
+            $this->content .= "<li><a href=\"$url\">" . htmlspecialchars($animal->getNom()) . "</a></li>";
+        }
+        $this->content .= "</ul>";
+    }
 }
 
 ?>
+

@@ -1,24 +1,36 @@
 <?php
-include 'view/View.php';
-include 'control/Controller.php';
+require_once("view/View.php");
+require_once("control/Controller.php");
+
 class Router {
-  
-  public function main() {
+    public function main() {
+        $view = new View($this);  
+        $controller = new Controller($view);
 
-    $controller = new Controller(new View());
-
-
-    $id = 'medor';
-
-    if ( !empty($_GET) && isset($_GET['id']) ){
-      $id = !empty(htmlspecialchars($_GET['id'])) ? htmlspecialchars($_GET['id']) : 'medor';
+    if(!empty($_GET)){
+        
+        if (isset($_GET['action']) && $_GET['action'] === "liste") {
+            $controller->showList();
+        } elseif (isset($_GET['id'])) {
+            $controller->showInformation($_GET['id']);
+        }
     }
-      
-
-    $controller->showInformation($id);
-
+    
+    if(empty($_GET)){
+       $controller->showInformation('medor');
+    }
+    
+    if (isset($_GET['action']) && $_GET['action'] !== "liste") {
+        $controller->showInformation('medor');
+    }
+    
   }
-  
+
+
+    public function getAnimalURL($id) {
+        return "site.php?id=" . urlencode($id);
+    }
 }
 
+?>
 
