@@ -21,6 +21,12 @@ class Controller {
         $this->view->render();
     }
 
+    public function showHomePage(){
+        $this->view->prepareHomePage();
+        $this->view->render();
+
+    }
+
     public function showList() {
         $this->view->prepareListPage($this->storage->readAll());
         $this->view->render();

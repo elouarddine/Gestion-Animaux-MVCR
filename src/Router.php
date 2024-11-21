@@ -16,9 +16,20 @@ class Router {
                 $controller->showInformation('Inconnu');
             }
         } else {
-            $controller->showList();
+            $controller->showHomePage();
         }
+    
     }
+
+
+    public function homePage() {
+      return "site.php";
+    }
+
+  
+   public function getAnimalListeURL() {
+    return "site.php?action=liste";
+   }
 
     public function getAnimalURL($id) {
         return "site.php?id=" . urlencode($id);

@@ -25,5 +25,17 @@ class AnimalStorageStub implements AnimalStorage {
     public function readAll() {
         return $this->animals;
     }
+
+    public function create(Animal $a) {
+        throw new Exception("La méthode 'create' n'est pas implémentée dans AnimalStorageStub.");
+    }
+
+    public function delete($id) {
+        throw new Exception("La méthode 'delete' n'est pas implémentée dans AnimalStorageStub.");
+    }
+
+    public function update($id, Animal $a) {
+        throw new Exception("La méthode 'update' n'est pas implémentée dans AnimalStorageStub.");
+    }
 }
 
