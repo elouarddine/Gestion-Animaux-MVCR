@@ -18,18 +18,33 @@ class Controller {
         } else {
             $this->view->prepareUnknownAnimalPage();
         }
-        $this->view->render();
+        
     }
 
     public function showHomePage(){
         $this->view->prepareHomePage();
-        $this->view->render();
+        
 
     }
 
     public function showList() {
         $this->view->prepareListPage($this->storage->readAll());
-        $this->view->render();
+        
     }
+
+    public function createNewAnimal(){
+        $this->view->prepareAnimalCreationPage();
+    }
+
+    public function saveNewAnimal(array $data){
+        $nom = $data['nom'];
+        $espece = $data['espece'];
+        $age = $data['age'];
+        $animal = new Animal($nom, $espece, $age);
+        $this->storage->create($animal);
+        $this->view->prepareAnimalPage($animal);
+    }
+
+
 }
 

@@ -12,6 +12,7 @@ class View {
         $this->menu = array(
             "Accueil" => $this->router->homePage(),
             "Liste d'animaux" => $this->router->getAnimalListeURL(),
+            "creer" => $this->router->getAnimalCreationURL(),
         );
 
     }
@@ -20,9 +21,22 @@ class View {
     public function getMenu() {
         return $this->menu;
       }
-
+  
+    public function prepareAnimalCreationPage(){
+        //action="router.php"
+        $this->title = "Ajouter votre Animal";
+        $s = '<form action="'.$this->router->getAnimalSaveURL().'" method="POST">'."\n";
+		$s .= "<label for='name'>Nom:</label>
+        <input type='name' placeholder='nom' name='nom' />
+        <label for='espece'>Espece :</label>
+        <input type='espece' placeholder='espece' name='espece' />
+        <label for='age'>Age :</label>
+        <input type='text' placeholder='age' name='age' />
+        <button type='submit'>Envoyer !</button>
+        </form>";
+		$this->content = $s;
+    }
     
-
     public function prepareTestPage() {
         $this->title = "Page de Test";
         $this->content = "Ceci est le contenu de la page de test.";
