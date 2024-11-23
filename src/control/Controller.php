@@ -43,9 +43,8 @@ class Controller {
         
         if($animalBuilder->pasErreur()){
             $animal = $animalBuilder->createAnimal();
-            echo "<script>alert('new animal created')</script>";
-            $this->storage->create($animal);
-            $this->view->prepareAnimalPage($animal);
+            $id=$this->storage->create($animal);
+            $this->view->displayAnimalCreationSuccess($id); // Assurez-vous que getNom() renvoie l'ID ou une valeur unique
         }
         else{
             $this->view->prepareAnimalCreationPage($animalBuilder);

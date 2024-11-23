@@ -31,6 +31,9 @@ class Router {
         $view->render();
     }
 
+    public function POSTredirect($url, $feedback){
+        header("Location: " . $url, true, 303);
+    }
     public function getAnimalCreationURL(){
         return "site.php?action=nouveau";
     } 

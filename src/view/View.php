@@ -46,6 +46,11 @@ class View {
     
         $this->content = $s;
     }
+
+    public function displayAnimalCreationSuccess($id) {
+        // Redirige vers la page de l'animal nouvellement créé avec un message de feedback ignoré pour l'instant
+        $this->router->POSTredirect($this->router->getAnimalURL($id), 'Animal créé avec succès !');
+    }
     
     public function prepareTestPage() {
         $this->title = "Page de Test";
@@ -125,5 +130,3 @@ echo $this->content;
 }
 
 ?>
-
-
