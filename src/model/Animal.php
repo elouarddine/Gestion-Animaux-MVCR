@@ -6,9 +6,9 @@ class Animal {
   private $age;
 
   public function __construct(string $nom ,string $espece ,int $age) {
-      $this->nom = $nom;
-      $this->espece = $espece;
-      $this->age = $age;
+    $this->nom = $nom;
+    $this->espece = $espece;
+    $this->age = $age;
 
   }
   public function getNom(): string {

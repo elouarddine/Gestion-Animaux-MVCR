@@ -1,5 +1,6 @@
 <?php
 require_once("model/Animal.php");
+require_once("model/AnimalBuilder.php");
 require_once("model/AnimalStorage.php");
 
 class Controller {
@@ -37,12 +38,27 @@ class Controller {
     }
 
     public function saveNewAnimal(array $data){
+
         $nom = $data['nom'];
         $espece = $data['espece'];
         $age = $data['age'];
-        $animal = new Animal($nom, $espece, $age);
-        $this->storage->create($animal);
-        $this->view->prepareAnimalPage($animal);
+
+        if ( empty($nom) || is_numeric($nom) ) {
+            $this->view->prepareAnimalCreationPage($data,"Nom invalide");
+        }
+        else if (empty($espece) || is_numeric($espece)){
+            $this->view->prepareAnimalCreationPage($data,"Espece invalide");
+        }
+        else if ( !is_numeric($age) || $age < 0){
+            $this->view->prepareAnimalCreationPage($data,"Age invalide");
+        }
+        else{
+            $animalBuilder = new AnimalBuilder();
+            $animal = $animalBuilder->setNom($nom)->setEspece($espece)->setAge($age)->build();
+
+            $this->storage->create($animal);
+            $this->view->prepareAnimalPage($animal);
+        }
     }
 
 

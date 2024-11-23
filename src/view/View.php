@@ -22,19 +22,26 @@ class View {
         return $this->menu;
       }
   
-    public function prepareAnimalCreationPage(){
-        //action="router.php"
+      public function prepareAnimalCreationPage($data = null,$error = "") {
+
+        $nom = isset($data['nom']) ? $data['nom'] : '';
+        $espece = isset($data['espece']) ? $data['espece'] : '';
+        $age = isset($data['age']) ? $data['age'] : '';
+    
         $this->title = "Ajouter votre Animal";
-        $s = '<form action="'.$this->router->getAnimalSaveURL().'" method="POST">'."\n";
-		$s .= "<label for='name'>Nom:</label>
-        <input type='name' placeholder='nom' name='nom' />
-        <label for='espece'>Espece :</label>
-        <input type='espece' placeholder='espece' name='espece' />
-        <label for='age'>Age :</label>
-        <input type='text' placeholder='age' name='age' />
-        <button type='submit'>Envoyer !</button>
-        </form>";
-		$this->content = $s;
+    
+        $s = '<form action="' . $this->router->getAnimalSaveURL() . '" method="POST">' . "\n";
+        $s .= "<label for='name'>Nom:</label>
+                <input type='text' placeholder='nom' name='nom' value='" . htmlspecialchars($nom, ENT_QUOTES) . "' />
+                <label for='espece'>Espece :</label>
+                <input type='text' placeholder='espece' name='espece' value='" . htmlspecialchars($espece, ENT_QUOTES) . "' />
+                <label for='age'>Age :</label>
+                <input type='number' placeholder='age' name='age' value='" . htmlspecialchars($age, ENT_QUOTES) . "' />
+                <button type='submit'>Envoyer !</button>
+                </form>
+                <p style='color:red;'>".$error."</p>";
+    
+        $this->content = $s;
     }
     
     public function prepareTestPage() {
@@ -69,7 +76,7 @@ class View {
 
     public function prepareUnexpectedErrorPage(Exception $e=null) {
         $this->title = "Erreur";
-        $this->content = "Une erreur inattendue s'est produite.";
+        $this->content = "Une erreur inattendue s'est produite.".$e;
     }
 
     public function prepareDebugPage($variable) {
@@ -89,9 +96,6 @@ class View {
     <title><?php echo $this->title; ?></title>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="skin/screen.css" />
-    <style>
-<?php echo $this->style; ?>
-    </style>
 </head>
 <body>
     <nav class="menu">
