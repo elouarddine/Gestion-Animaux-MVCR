@@ -5,15 +5,17 @@ class View {
     private $content;
     private $router;  
     private $menu;  
+    private $feedback;
 
 
-    public function __construct($router) {
+    public function __construct($router,$feedback) {
         $this->router = $router;
         $this->menu = array(
             "Accueil" => $this->router->homePage(),
             "Liste d'animaux" => $this->router->getAnimalListeURL(),
             "creer" => $this->router->getAnimalCreationURL(),
         );
+        $this->feedback = $feedback;
 
     }
 
@@ -117,6 +119,7 @@ foreach ($this->getMenu() as $text => $link) {
     </nav>
     <main>
         <h1><?php echo $this->title; ?></h1>
+        <p style="color:green"><?php echo $this->feedback; ?></p>
 <?php
 echo $this->content;
 ?>

@@ -4,7 +4,13 @@ require_once("control/Controller.php");
 
 class Router {
     public function main(AnimalStorage $storage) {
-        $view = new View($this);
+        $feedback="";
+        if (isset($_SESSION['feedback'])) {
+            $feedback = $_SESSION['feedback'];
+            $_SESSION['feedback'] = "";
+        }
+
+        $view = new View($this,$feedback);
         $controller = new Controller($view, $storage);
     
         if (!empty($_GET)) {
@@ -32,6 +38,7 @@ class Router {
     }
 
     public function POSTredirect($url, $feedback){
+        $_SESSION['feedback'] = $feedback;
         header("Location: " . $url, true, 303);
     }
     public function getAnimalCreationURL(){
