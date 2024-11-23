@@ -34,30 +34,21 @@ class Controller {
     }
 
     public function createNewAnimal(){
-        $this->view->prepareAnimalCreationPage();
+        $this->view->prepareAnimalCreationPage(new AnimalBuilder($_POST));
     }
 
     public function saveNewAnimal(array $data){
 
-        $nom = $data['nom'];
-        $espece = $data['espece'];
-        $age = $data['age'];
-
-        if ( empty($nom) || is_numeric($nom) ) {
-            $this->view->prepareAnimalCreationPage($data,"Nom invalide");
-        }
-        else if (empty($espece) || is_numeric($espece)){
-            $this->view->prepareAnimalCreationPage($data,"Espece invalide");
-        }
-        else if ( !is_numeric($age) || $age < 0){
-            $this->view->prepareAnimalCreationPage($data,"Age invalide");
-        }
-        else{
-            $animalBuilder = new AnimalBuilder();
-            $animal = $animalBuilder->setNom($nom)->setEspece($espece)->setAge($age)->build();
-
+        $animalBuilder = new AnimalBuilder($data);
+        
+        if($animalBuilder->pasErreur()){
+            $animal = $animalBuilder->createAnimal();
+            echo "<script>alert('new animal created')</script>";
             $this->storage->create($animal);
             $this->view->prepareAnimalPage($animal);
+        }
+        else{
+            $this->view->prepareAnimalCreationPage($animalBuilder);
         }
     }
 

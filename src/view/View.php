@@ -22,21 +22,24 @@ class View {
         return $this->menu;
       }
   
-      public function prepareAnimalCreationPage($data = null,$error = "") {
+    public function prepareAnimalCreationPage(AnimalBuilder $builder) {
 
-        $nom = isset($data['nom']) ? $data['nom'] : '';
-        $espece = isset($data['espece']) ? $data['espece'] : '';
-        $age = isset($data['age']) ? $data['age'] : '';
+        $data = $builder->getData();
+        $error = $builder->getError();
+
+        $nom = isset($data[AnimalBuilder::NAME_REF]) ? htmlspecialchars($data[AnimalBuilder::NAME_REF]) : '';
+        $espece = isset($data[AnimalBuilder::SPECIES_REF]) ? htmlspecialchars($data[AnimalBuilder::SPECIES_REF]) : '';
+        $age = isset($data[AnimalBuilder::AGE_REF]) ? htmlspecialchars($data[AnimalBuilder::AGE_REF]) : '';
     
         $this->title = "Ajouter votre Animal";
     
         $s = '<form action="' . $this->router->getAnimalSaveURL() . '" method="POST">' . "\n";
         $s .= "<label for='name'>Nom:</label>
-                <input type='text' placeholder='nom' name='nom' value='" . htmlspecialchars($nom, ENT_QUOTES) . "' />
+                <input type='text' placeholder='nom' name='nom' value='" . $nom. "' />
                 <label for='espece'>Espece :</label>
-                <input type='text' placeholder='espece' name='espece' value='" . htmlspecialchars($espece, ENT_QUOTES) . "' />
+                <input type='text' placeholder='espece' name='espece' value='" . $espece. "' />
                 <label for='age'>Age :</label>
-                <input type='number' placeholder='age' name='age' value='" . htmlspecialchars($age, ENT_QUOTES) . "' />
+                <input type='number' placeholder='age' name='age' value='" . $age. "' />
                 <button type='submit'>Envoyer !</button>
                 </form>
                 <p style='color:red;'>".$error."</p>";
