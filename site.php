@@ -10,6 +10,8 @@ set_include_path("./src");
 require_once("model/AnimalStorageMySQL.php");
 session_start();
 require_once("Router.php");
+require_once("PathInfoRouter.php");
+
 
 
 $connexion = null;
@@ -35,6 +37,7 @@ try {
  * et de lancer son main.
  */
 $storage = new AnimalStorageMySQL($connexion);
+//$router = new PathInfoRouter();
 $router = new Router();
 $router->main($storage);
 ?>

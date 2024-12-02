@@ -24,8 +24,6 @@ class Controller {
 
     public function showHomePage(){
         $this->view->prepareHomePage();
-        
-
     }
 
     public function showList() {
