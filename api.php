@@ -1,19 +1,9 @@
-<?php
-
-
-/*
- * On indique que les chemins des fichiers qu'on inclut
- * seront relatifs au répertoire src.
- */
+<?php header('Access-Control-Allow-Origin: https://ensweb.unicaen.fr');
 $currentUser = posix_getpwuid(posix_getuid())['name']; // pour récupérer l'utilisateur courant
-require_once('/users/'.$currentUser.'/private/mysql_config.php');
+require_once('/users/'.$currentUser.'/private/mysql_config.php'); // recupérer le fichier mysql_config qui définit les constantes de connexion à mysql
 set_include_path("./src");
 require_once("model/AnimalStorageMySQL.php");
-session_start();
-require_once("Router.php");
-require_once("PathInfoRouter.php");
-
-
+require_once("ApiRouter.php");
 
 $connexion = null;
 $options = [
@@ -32,13 +22,7 @@ try {
 }
 
 
-/*
- * Cette page est simplement le point d'arrivée de l'internaute
- * sur notre site. On se contente de créer un routeur
- * et de lancer son main.
- */
-$storage = new AnimalStorageMySQL($connexion);
-//$router = new PathInfoRouter();
-$router = new Router();
+$storage = new AnimalStorageMySQL($connexion); // Connexion à la base de données
+$router = new ApiRouter();
 $router->main($storage);
 ?>

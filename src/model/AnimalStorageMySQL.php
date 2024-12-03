@@ -2,7 +2,7 @@
 
 require_once("model/Animal.php");
 require_once("model/AnimalStorage.php");
-require_once('/users/qach211/private/mysql_config.php');
+//require_once('/users/qach211/private/mysql_config.php');
 
 class AnimalStorageMySQL implements AnimalStorage {
 

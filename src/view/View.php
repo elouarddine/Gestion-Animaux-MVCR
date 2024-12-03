@@ -36,11 +36,11 @@ class View {
         $this->title = "Ajouter votre Animal";
     
         $s = '<form action="' . $this->router->getAnimalSaveURL() . '" method="POST">' . "\n";
-        $s .= "<label for='name'>Nom:</label>
+        $s .= "<label>Nom:</label>
                 <input type='text' placeholder='nom' name='nom' value='" . $nom. "' />
-                <label for='espece'>Espece :</label>
+                <label>Espece :</label>
                 <input type='text' placeholder='espece' name='espece' value='" . $espece. "' />
-                <label for='age'>Age :</label>
+                <label>Age :</label>
                 <input type='number' placeholder='age' name='age' value='" . $age. "' />
                 <button type='submit'>Envoyer !</button>
                 </form>
