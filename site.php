@@ -5,7 +5,7 @@
  * On indique que les chemins des fichiers qu'on inclut
  * seront relatifs au répertoire src.
  */
-require_once('/users/qach211/private/mysql_config.php');
+require_once('/users/elouard211/private/mysql_config.php');
 set_include_path("./src");
 require_once("model/AnimalStorageMySQL.php");
 session_start();
