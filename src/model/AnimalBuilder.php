@@ -16,7 +16,9 @@ class AnimalBuilder {
 
     public function getData() { return $this->data; }
     public function getError() { return $this->error; }
-    public function pasErreur(){ return empty($this->error); }
+    public function pasErreur(){ 
+        return $this->isValid();
+    }
     
     public function isValid() {
         if (empty($this->data)) {

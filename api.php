@@ -1,4 +1,6 @@
-<?php header('Access-Control-Allow-Origin: https://ensweb.unicaen.fr');
+<?php 
+header('Access-Control-Allow-Origin: https://ensweb.unicaen.fr');
+header('Access-Control-Allow-Headers: Authorization');
 $currentUser = posix_getpwuid(posix_getuid())['name']; // pour récupérer l'utilisateur courant
 require_once('/users/'.$currentUser.'/private/mysql_config.php'); // recupérer le fichier mysql_config qui définit les constantes de connexion à mysql
 set_include_path("./src");
