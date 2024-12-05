@@ -57,12 +57,19 @@ class Controller {
             $animal = $animalBuilder->createAnimal();
 
             $imagePath = $this->handleImageUpload();
+
             if ($imagePath) {
                 $animal->setChemin($imagePath);
             }
 
             $id = $this->storage->create($animal);
-            $this->view->displayAnimalCreationSuccess($id);
+            if($id){
+                $this->view->displayAnimalCreationSuccess($id);
+            }else{
+
+                $this->view->prepareUnexpectedErrorPage();
+            }
+        
         } else {
             $this->view->prepareAnimalCreationPage($animalBuilder);
         }
@@ -95,8 +102,9 @@ class Controller {
 
     public function deleteAnimal($id) {
         if ($this->storage->delete($id)) {
-            $this->view->prepareHomePage();
             $_SESSION['feedback'] = "Animal supprimé avec succès.";
+            $this->view->prepareHomePage();
+
         } else {
             $this->view->prepareUnexpectedErrorPage();
         }

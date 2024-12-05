@@ -64,7 +64,7 @@ class View {
     public function prepareAnimalPage(Animal $animal) {
         $this->title = "Page sur " . $animal->getNom();
         $imagePath = $animal->getChemin();
-        
+
         if (!$imagePath || !file_exists($imagePath)) {
             $imagePath = 'uploads/default.png';
         }

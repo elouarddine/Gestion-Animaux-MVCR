@@ -16,7 +16,7 @@ class AnimalStorageMySQL implements AnimalStorage {
         $stmt->execute();
         $tab = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($tab) {
-            return new Animal($tab['id'] , $tab['name'], $tab['species'], $tab['age'], $tab['imagePath'] ?? '');
+            return new Animal($tab['id'] , $tab['name'], $tab['species'], $tab['age'], $tab['chemin'] );
         }
         return null;
     }
@@ -27,16 +27,17 @@ class AnimalStorageMySQL implements AnimalStorage {
         $tableaux = $result->fetchAll(PDO::FETCH_ASSOC);
         $return = [];
         foreach ($tableaux as $tab) {
-            $return[$tab['id']] = new Animal($tab['id'] , $tab['name'], $tab['species'], $tab['age'], $tab['imagePath'] ?? '');
+            $return[$tab['id']] = new Animal($tab['id'] , $tab['name'], $tab['species'], $tab['age'], $tab['chemin']);
         }
         return $return;
     }
 
     public function create(Animal $a) {
         try {
-            $requete = "INSERT INTO animals (name, species, age, imagePath) VALUES (:name, :species, :age, :imagePath)";
+            $requete = "INSERT INTO animals VALUES (:id , :name, :species, :age, :imagePath)";
             $result = $this->connexion->prepare($requete);
 
+            $result->bindValue(':id', $a->getId(), PDO::PARAM_STR);
             $result->bindValue(':name', $a->getNom(), PDO::PARAM_STR);
             $result->bindValue(':species', $a->getEspece(), PDO::PARAM_STR);
             $result->bindValue(':age', $a->getAge(), PDO::PARAM_INT);
@@ -45,6 +46,7 @@ class AnimalStorageMySQL implements AnimalStorage {
             $result->execute();
 
             return $this->connexion->lastInsertId();
+            return $id;
         } catch (PDOException $e) {
             error_log("Erreur d'enregistrement: " . $e->getMessage());
             return false;
@@ -59,7 +61,7 @@ class AnimalStorageMySQL implements AnimalStorage {
 
             $animal = $this->read($id);
             if ($animal && file_exists($animal->getChemin())) {
-                unlink($animal->getImagePath());
+                unlink($animal->getChemin());
             }
 
             $stmt->execute();

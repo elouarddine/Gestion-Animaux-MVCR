@@ -28,7 +28,6 @@ class AnimalBuilder {
             return false;
         }
 
-        // Check for required fields using constants
         if (!isset($this->data[self::NAME_REF])) {
             $this->error = "Nom n'existe pas dans les données";
             return false;
@@ -62,11 +61,10 @@ class AnimalBuilder {
         $nom = $this->data[self::NAME_REF];
         $espece = $this->data[self::SPECIES_REF];
         $age = $this->data[self::AGE_REF];
-        $id = isset($this->data[self::ID_REF]) ? $this->data[self::ID_REF] : null; 
         $imagePath = isset($this->data[self::IMAGE_PATH_REF]) ? $this->data[self::IMAGE_PATH_REF] : ''; 
 
 
-        return new Animal($id, $nom, $espece, $age, $imagePath);
+        return new Animal(null, $nom, $espece, $age, $imagePath);
     }
 }
 
