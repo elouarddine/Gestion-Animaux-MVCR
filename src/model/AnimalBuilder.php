@@ -58,7 +58,12 @@ class AnimalBuilder {
     }
 
     public function createAnimal() {
-        $id = $this->data[self::ID_REF] === null ? null : $this->data[self::ID_REF];
+
+        $id = null;
+        if ( isset($this->data[self::ID_REF]) ){
+            $id = $this->data[self::ID_REF] === null ? null : $this->data[self::ID_REF];
+        }
+
         $nom = $this->data[self::NAME_REF];
         $espece = $this->data[self::SPECIES_REF];
         $age = $this->data[self::AGE_REF];
