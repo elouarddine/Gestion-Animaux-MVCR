@@ -74,19 +74,20 @@ class AnimalStorageMySQL implements AnimalStorage {
 
     public function update($id, Animal $a) {
         try {
-            $requete = "UPDATE animals SET name = :name, species = :species, age = :age, imagePath = :imagePath WHERE id = :id";
+            $requete = "UPDATE animals SET name = :name, species = :species, age = :age, chemin = :imagePath WHERE id = :id";
             $result = $this->connexion->prepare($requete);
 
             $result->bindValue(':name', $a->getNom(), PDO::PARAM_STR);
             $result->bindValue(':species', $a->getEspece(), PDO::PARAM_STR);
             $result->bindValue(':age', $a->getAge(), PDO::PARAM_INT);
-            $result->bindValue(':imagePath', $a->getImagePath(), PDO::PARAM_STR);
+            $result->bindValue(':imagePath', $a->getChemin(), PDO::PARAM_STR);
             $result->bindValue(':id', $id, PDO::PARAM_INT);
 
             $result->execute();
             return true;
         } catch (PDOException $e) {
             error_log("Erreur de modification: " . $e->getMessage());
+            echo $e->getMessage();
             return false;
         }
     }

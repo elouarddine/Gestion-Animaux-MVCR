@@ -84,19 +84,27 @@ class Controller {
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
             $animalBuilder = new AnimalBuilder($_POST);
+
             if ($animalBuilder->pasErreur()) {
+
                 $imagePath = $this->handleImageUpload();
+
+                $newAnimalData = $animalBuilder->createAnimal();
                 if ($imagePath) {
-                    $animal->setImagePath($imagePath);
+                    $newAnimalData->setChemin($imagePath);
                 }
-                $this->storage->update($id, $animalBuilder->createAnimal());
-                $this->view->displayAnimalUpdateSuccess($id);
+                if($this->storage->update($id, $newAnimalData)){
+                    $this->view->displayAnimalUpdateSuccess($id);
+                }
+
             } else {
-                $this->view->prepareAnimalCreationPage($animalBuilder);
+                $this->view->prepareAnimalUpdatePage($animalBuilder);
             }
+
         } else {
-            $this->view->prepareAnimalCreationPage(new AnimalBuilder($animal->toArray()));
+            $this->view->prepareAnimalUpdatePage(new AnimalBuilder($animal->toArray()));
         }
     }
 

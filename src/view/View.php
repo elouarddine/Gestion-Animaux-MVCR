@@ -52,6 +52,45 @@ class View {
         $this->content = $s;
     }
 
+    public function prepareAnimalUpdatePage(AnimalBuilder $builder) {
+
+        $data = $builder->getData();
+        $error = $builder->getError();
+    
+        $nom = isset($data[AnimalBuilder::NAME_REF]) ? htmlspecialchars($data[AnimalBuilder::NAME_REF]) : '';
+        $espece = isset($data[AnimalBuilder::SPECIES_REF]) ? htmlspecialchars($data[AnimalBuilder::SPECIES_REF]) : '';
+        $age = isset($data[AnimalBuilder::AGE_REF]) ? htmlspecialchars($data[AnimalBuilder::AGE_REF]) : '';
+        $id = isset($data[AnimalBuilder::ID_REF]) ? htmlspecialchars($data[AnimalBuilder::ID_REF]) : '';
+    
+        $this->title = "Modifier un Animal";
+    
+        $s = '<form action="' . $this->router->getAnimalUpdateURL($id) . '" method="POST" enctype="multipart/form-data">' . "\n";
+        $s .= "
+            <input type='hidden' name='id' value='" . $id . "' />
+            
+            <label>Nom:</label>
+            <input type='text' placeholder='nom' name='nom' value='" . $nom . "' required />
+            
+            <label>Espèce :</label>
+            <input type='text' placeholder='espèce' name='espece' value='" . $espece . "' required />
+            
+            <label>Âge :</label>
+            <input type='number' placeholder='âge' name='age' value='" . $age . "' required />
+            
+            <label>Image :</label>
+            <input type='file' name='image' accept='image/*' />
+            
+            <button type='submit' class='btn'>Modifier</button>
+        </form>
+        <p style='color:red;'>".$error."</p>";
+    
+        $this->content = $s;
+    }
+
+    public function displayAnimalUpdateSuccess($id) {
+        $this->router->POSTredirect($this->router->getAnimalURL($id), 'Animal modifié avec succès !');
+    }
+
     public function displayAnimalCreationSuccess($id) {
         $this->router->POSTredirect($this->router->getAnimalURL($id), 'Animal créé avec succès !');
     }
@@ -65,7 +104,7 @@ class View {
         $this->title = "Page sur " . $animal->getNom();
         $imagePath = $animal->getChemin();
 
-        if (!$imagePath || !file_exists($imagePath)) {
+        if (!$imagePath || !file_exists($imagePath) || $imagePath === null) {
             $imagePath = 'uploads/default.png';
         }
 

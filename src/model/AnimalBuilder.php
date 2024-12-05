@@ -58,13 +58,14 @@ class AnimalBuilder {
     }
 
     public function createAnimal() {
+        $id = $this->data[self::ID_REF] === null ? null : $this->data[self::ID_REF];
         $nom = $this->data[self::NAME_REF];
         $espece = $this->data[self::SPECIES_REF];
         $age = $this->data[self::AGE_REF];
         $imagePath = isset($this->data[self::IMAGE_PATH_REF]) ? $this->data[self::IMAGE_PATH_REF] : ''; 
 
 
-        return new Animal(null, $nom, $espece, $age, $imagePath);
+        return new Animal($id, $nom, $espece, $age, $imagePath);
     }
 }
 

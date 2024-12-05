@@ -8,13 +8,12 @@ class Animal {
   private $age;
   private $chemin;
 
-  public function __construct($id ,  string $nom , string $espece , $age , string $chemin) {
+  public function __construct($id ,  string $nom , string $espece , $age ,$chemin) {
     $this->id = $id;
     $this->nom = $nom;
     $this->espece = $espece;
     $this->age = $age;
-    $this->chemin = $chemin;
-
+    $this->chemin = $chemin === null ? '' : $chemin;
   }
   
   
