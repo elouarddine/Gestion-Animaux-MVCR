@@ -7,25 +7,21 @@ class View {
     private $menu;  
     private $feedback;
 
-
-    public function __construct($router,$feedback) {
+    public function __construct($router, $feedback) {
         $this->router = $router;
         $this->menu = array(
             "Accueil" => $this->router->homePage(),
             "Liste d'animaux" => $this->router->getAnimalListeURL(),
-            "creer" => $this->router->getAnimalCreationURL(),
+            "Créer un animal" => $this->router->getAnimalCreationURL(),
         );
         $this->feedback = $feedback;
-
     }
-
 
     public function getMenu() {
         return $this->menu;
-      }
+    }
   
     public function prepareAnimalCreationPage(AnimalBuilder $builder) {
-
         $data = $builder->getData();
         $error = $builder->getError();
 
@@ -33,40 +29,52 @@ class View {
         $espece = isset($data[AnimalBuilder::SPECIES_REF]) ? htmlspecialchars($data[AnimalBuilder::SPECIES_REF]) : '';
         $age = isset($data[AnimalBuilder::AGE_REF]) ? htmlspecialchars($data[AnimalBuilder::AGE_REF]) : '';
     
-        $this->title = "Ajouter votre Animal";
+        $this->title = "Ajouter un Animal";
     
-        $s = '<form action="' . $this->router->getAnimalSaveURL() . '" method="POST">' . "\n";
-        $s .= "<label>Nom:</label>
-                <input type='text' placeholder='nom' name='nom' value='" . $nom. "' />
-                <label>Espece :</label>
-                <input type='text' placeholder='espece' name='espece' value='" . $espece. "' />
-                <label>Age :</label>
-                <input type='number' placeholder='age' name='age' value='" . $age. "' />
-                <button type='submit'>Envoyer !</button>
-                </form>
-                <p style='color:red;'>".$error."</p>";
+        $s = '<form action="' . $this->router->getAnimalSaveURL() . '" method="POST" enctype="multipart/form-data">' . "\n";
+        $s .= "
+            <label>Nom:</label>
+            <input type='text' placeholder='nom' name='nom' value='" . $nom . "' required />
+            
+            <label>Espèce :</label>
+            <input type='text' placeholder='espèce' name='espece' value='" . $espece . "' required />
+            
+            <label>Âge :</label>
+            <input type='number' placeholder='âge' name='age' value='" . $age . "' required />
+            
+            <label>Image :</label>
+            <input type='file' name='image' accept='image/*' />
+            
+            <button type='submit' class='btn'>Créer</button>
+        </form>
+        <p style='color:red;'>".$error."</p>";
     
         $this->content = $s;
     }
 
     public function displayAnimalCreationSuccess($id) {
-        // Redirige vers la page de l'animal nouvellement créé avec un message de feedback ignoré pour l'instant
         $this->router->POSTredirect($this->router->getAnimalURL($id), 'Animal créé avec succès !');
     }
     
-    public function prepareTestPage() {
-        $this->title = "Page de Test";
-        $this->content = "Ceci est le contenu de la page de test.";
-    }
-
     public function prepareHomePage() {
-        $this->title = "Page d'Accueil";
-        $this->content = "Bienvenu dans notre site web.";
+        $this->title = "Page d'accueil";
+        $this->content = "<p>Bienvenue dans notre gestionnaire d'animaux !</p>";
     }
 
     public function prepareAnimalPage(Animal $animal) {
         $this->title = "Page sur " . $animal->getNom();
-        $this->content = $animal->getNom() . " est un " . $animal->getEspece() . " de " . $animal->getAge() . " ans.";
+        $imagePath = $animal->getChemin();
+        
+        if (!$imagePath || !file_exists($imagePath)) {
+            $imagePath = 'uploads/default.png';
+        }
+
+        $this->content = "<p>" . $animal->getNom() . " est un " . $animal->getEspece() . " de " . $animal->getAge() . " ans.</p>";
+        $this->content .= '<img src="' . htmlspecialchars($imagePath) . '" alt="Image de ' . $animal->getNom() . '" style="max-width: 400px;">';
+        $this->content .= '<div class="animal-actions">
+            <button onclick="location.href=\'' . $this->router->getAnimalUpdateURL($animal->getId()) . '\'">Modifier</button>
+            <button onclick="location.href=\'' . $this->router->getAnimalDeleteURL($animal->getId()) . '\'">Supprimer</button>
+        </div>';
     }
 
     public function prepareUnknownAnimalPage() {
@@ -76,22 +84,26 @@ class View {
 
     public function prepareListPage(array $animals) {
         $this->title = "Liste des Animaux";
-        $this->content = "<ul>";
+        $this->content = "<ul class='animal-list'>";
         foreach ($animals as $id => $animal) {
             $url = $this->router->getAnimalURL($id);
-            $this->content .= "<li><a href=\"$url\">" . htmlspecialchars($animal->getNom()) . "</a></li>";
+            $this->content .= "
+                <li class='animal-item'>
+                    <div>
+                        <span>" . htmlspecialchars($animal->getNom()) . "</span>
+                        <a href=\"$url\">Voir</a>
+                    </div>
+                    <a href=\"" . $this->router->getAnimalDeleteURL($id) . "\" class='delete-btn'>
+                        <img src='uploads/trash.png' alt='Supprimer'>
+                    </a>
+                </li>";
         }
         $this->content .= "</ul>";
     }
 
-    public function prepareUnexpectedErrorPage(Exception $e=null) {
+    public function prepareUnexpectedErrorPage(Exception $e = null) {
         $this->title = "Erreur";
-        $this->content = "Une erreur inattendue s'est produite.".$e;
-    }
-
-    public function prepareDebugPage($variable) {
-        $this->title = 'Debug';
-        $this->content = '<pre>'.htmlspecialchars(var_export($variable, true)).'</pre>';
+        $this->content = "Une erreur inattendue s'est produite." . $e;
     }
 
     public function render() {
@@ -127,9 +139,6 @@ echo $this->content;
 </body>
 </html>
 <?php 
-
     }
-
 }
-
 ?>

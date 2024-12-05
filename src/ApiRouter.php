@@ -7,7 +7,7 @@ class ApiRouter {
         $view = new JsonView();
         $controller = new Controller($view, $storage);
 
-        // Récupérer les paramètres GET
+
         $collection = isset($_GET['collection']) ? $_GET['collection'] : null;
         $id = isset($_GET['id']) ? intval($_GET['id']) : null;
 

@@ -4,10 +4,12 @@ class AnimalBuilder {
     private $data;
     private $error;
 
-    // Define constants for field names
+
     const NAME_REF = 'nom';
     const SPECIES_REF = 'espece';
     const AGE_REF = 'age';
+    const ID_REF = 'id'; 
+    const IMAGE_PATH_REF = 'imagePath'; 
 
     public function __construct($data) {
         $this->data = $data;
@@ -23,7 +25,7 @@ class AnimalBuilder {
     public function isValid() {
         if (empty($this->data)) {
             $this->error = "Données vides";
-            return false; // Early return for better flow control
+            return false;
         }
 
         // Check for required fields using constants
@@ -53,15 +55,18 @@ class AnimalBuilder {
             return false;
         }
 
-        return true; // Return true if all validations pass
+        return true; 
     }
 
     public function createAnimal() {
         $nom = $this->data[self::NAME_REF];
         $espece = $this->data[self::SPECIES_REF];
         $age = $this->data[self::AGE_REF];
-        
-        return new Animal($nom, $espece, $age);
+        $id = isset($this->data[self::ID_REF]) ? $this->data[self::ID_REF] : null; 
+        $imagePath = isset($this->data[self::IMAGE_PATH_REF]) ? $this->data[self::IMAGE_PATH_REF] : ''; 
+
+
+        return new Animal($id, $nom, $espece, $age, $imagePath);
     }
 }
 

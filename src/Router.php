@@ -24,6 +24,20 @@ class Router {
                 case 'sauverNouveau':
                     $controller->saveNewAnimal($_POST);
                     break;
+                case 'update':
+                    if(isset($_GET['id'])) {
+                        $controller->updateAnimal($_GET['id']);
+                    }else{
+                        $controller->showHomePage();
+                    }
+                    break;
+                case 'delete':
+                    if(isset($_GET['id'])) {
+                        $controller->deleteAnimal($_GET['id']);
+                    }else{
+                        $controller->showHomePage();
+                    }
+                    break;
                 default:
                     if (isset($_GET['id'])) {
                         $controller->showInformation($_GET['id']);
@@ -61,6 +75,14 @@ class Router {
 
     public function getAnimalURL($id) {
         return "site.php?id=" . urlencode($id);
+    }
+
+    public function getAnimalUpdateURL($id) {
+        return "site.php?action=update&id=" . urlencode($id);
+    }
+
+    public function getAnimalDeleteURL($id) {
+        return "site.php?action=delete&id=" . urlencode($id);
     }
 }
 

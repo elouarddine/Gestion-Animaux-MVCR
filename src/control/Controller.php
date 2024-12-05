@@ -19,36 +19,87 @@ class Controller {
         } else {
             $this->view->prepareUnknownAnimalPage();
         }
-        
     }
 
-    public function showHomePage(){
+    public function showHomePage() {
         $this->view->prepareHomePage();
     }
 
     public function showList() {
         $this->view->prepareListPage($this->storage->readAll());
-        
     }
 
-    public function createNewAnimal(){
+    public function createNewAnimal() {
         $this->view->prepareAnimalCreationPage(new AnimalBuilder($_POST));
     }
 
-    public function saveNewAnimal(array $data){
+    private function handleImageUpload(): ?string {
+        if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+            $uploadDir = 'uploads/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
+            }
 
-        $animalBuilder = new AnimalBuilder($data);
-        
-        if($animalBuilder->pasErreur()){
-            $animal = $animalBuilder->createAnimal();
-            $id=$this->storage->create($animal);
-            $this->view->displayAnimalCreationSuccess($id); // Assurez-vous que getNom() renvoie l'ID ou une valeur unique
+            $tmpName = $_FILES['image']['tmp_name'];
+            $fileName = uniqid() . '_' . basename($_FILES['image']['name']);
+            $filePath = $uploadDir . $fileName;
+
+            if (move_uploaded_file($tmpName, $filePath)) {
+                return $filePath;
+            }
         }
-        else{
+        return null;
+    }
+
+    public function saveNewAnimal(array $data) {
+        $animalBuilder = new AnimalBuilder($data);
+        if ($animalBuilder->pasErreur()) {
+            $animal = $animalBuilder->createAnimal();
+
+            $imagePath = $this->handleImageUpload();
+            if ($imagePath) {
+                $animal->setChemin($imagePath);
+            }
+
+            $id = $this->storage->create($animal);
+            $this->view->displayAnimalCreationSuccess($id);
+        } else {
             $this->view->prepareAnimalCreationPage($animalBuilder);
         }
     }
 
+    public function updateAnimal($id) {
+        $animal = $this->storage->read($id);
 
+        if ($animal === null) {
+            $this->view->prepareUnknownAnimalPage();
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $animalBuilder = new AnimalBuilder($_POST);
+            if ($animalBuilder->pasErreur()) {
+                $imagePath = $this->handleImageUpload();
+                if ($imagePath) {
+                    $animal->setImagePath($imagePath);
+                }
+                $this->storage->update($id, $animalBuilder->createAnimal());
+                $this->view->displayAnimalUpdateSuccess($id);
+            } else {
+                $this->view->prepareAnimalCreationPage($animalBuilder);
+            }
+        } else {
+            $this->view->prepareAnimalCreationPage(new AnimalBuilder($animal->toArray()));
+        }
+    }
+
+    public function deleteAnimal($id) {
+        if ($this->storage->delete($id)) {
+            $this->view->prepareHomePage();
+            $_SESSION['feedback'] = "Animal supprimé avec succès.";
+        } else {
+            $this->view->prepareUnexpectedErrorPage();
+        }
+    }
 }
-
+?>
