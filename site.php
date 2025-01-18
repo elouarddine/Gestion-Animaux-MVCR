@@ -5,8 +5,7 @@
  * On indique que les chemins des fichiers qu'on inclut
  * seront relatifs au répertoire src.
  */
-$currentUser = posix_getpwuid(posix_getuid())['name']; // pour récupérer l'utilisateur courant
-require_once('/users/'.$currentUser.'/private/mysql_config.php');
+require_once('mysql_config.php');
 set_include_path("./src");
 require_once("model/AnimalStorageMySQL.php");
 session_start();
